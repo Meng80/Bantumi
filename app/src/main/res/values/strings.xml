@@ -56,4 +56,11 @@
     <!-- Diálogo de opcion guardar -->
     <string name="títuloDiálogoGuardar">Partido Guardado</string>
 
+    <!-- Diálogo de opcion recuperar -->
+    <string name="títuloDiálogoRecuperar">Partido recuperado </string>
+    <string name="msgDialogoRecuperar">Has Iniciado el juego</string>
+    <string name="diálogoRecuperar">¿Desea reiniciar otro partido?</string>
+
+
+
 </resources>

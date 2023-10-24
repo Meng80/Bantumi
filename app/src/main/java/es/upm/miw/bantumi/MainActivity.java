@@ -17,7 +17,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,6 +176,38 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, R.string.títuloDiálogoGuardar, Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                return true;
+
+            case R.id.opcRecuperarPartida:
+                RebootAlertDialog.Back callback = () -> {
+                    try {
+                        FileInputStream in = openFileInput("InformacionTablero.json");
+                        InputStreamReader inputStreamReader = new InputStreamReader(in);
+                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+                        while ((line = bufferedReader.readLine()) != null) {
+                            sb.append(line);
+                        }
+                        inputStreamReader.close();
+
+                        String jsonLoad = sb.toString();
+                        Gson gsonLoad = new Gson();
+                        InformacionTableroEntity[] informacion = gsonLoad.fromJson(jsonLoad, InformacionTableroEntity[].class);
+                        for (InformacionTableroEntity i : informacion) {
+                            juegoBantumi.setSemillas(i.posicion, i.dato);
+                        }
+                        Toast.makeText(MainActivity.this, R.string.títuloDiálogoRecuperar, Toast.LENGTH_LONG).show();
+                        changed = false;
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                };
+                if (changed) {
+                    new RebootAlertDialog(R.string.msgDialogoRecuperar, R.string.diálogoRecuperar, callback).show(getSupportFragmentManager(), "ALERT_DIALOG");
+                } else {
+                    callback.onSuccess();
                 }
                 return true;
 
