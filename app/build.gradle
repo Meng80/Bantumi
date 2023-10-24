@@ -36,4 +36,5 @@ dependencies {
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-core:$lifecycle_version"
+    implementation 'com.google.code.gson:gson:2.8.9'
 }

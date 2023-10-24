@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +15,15 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import es.upm.miw.bantumi.entity.InformacionTableroEntity;
 import es.upm.miw.bantumi.model.BantumiViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -140,10 +147,33 @@ public class MainActivity extends AppCompatActivity {
                     crearObservadores();
                 };
                 if(changed){
-                    new RebootAlertDialog(R.string.títuloDiálogo, R.string.msgDiálogo, callBack).show(getSupportFragmentManager(), "DIALOGO_REINICIAR");
+                    new RebootAlertDialog(R.string.títuloDiálogoReiniciar, R.string.msgDiálogo, callBack).show(getSupportFragmentManager(), "DIALOGO_REINICIAR");
                 }
                 else
                     callBack.onSuccess();
+                return true;
+
+            case R.id.opcGuardarPartida:
+                List<InformacionTableroEntity> tablero = new ArrayList<>();
+                for (int i = 0; i < JuegoBantumi.NUM_POSICIONES; i++) {
+                    InformacionTableroEntity informacion = new InformacionTableroEntity();
+                    informacion.posicion = i;
+                    informacion.dato = juegoBantumi.getSemillas(i);
+                    tablero.add(informacion);
+                    Log.d("test", "posicion: " + i + " - " + juegoBantumi.getSemillas(i));
+                }
+
+                Gson gson = new Gson();
+                String jsonSave = gson.toJson(tablero);
+
+                try {
+                    FileOutputStream outStream = openFileOutput("InformacionTablero.json", MODE_PRIVATE);
+                    outStream.write(jsonSave.getBytes(StandardCharsets.UTF_8));
+                    outStream.close();
+                    Toast.makeText(MainActivity.this, R.string.títuloDiálogoGuardar, Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
                 return true;
 
 

@@ -48,9 +48,12 @@
     <string name="txtDialogoFinalPregunta">¿Desea jugar otra partida?</string>
 
     <!-- Diálogo de opcion reiniciar -->
-    <string name="títuloDiálogo">Confirmación</string>
+    <string name="títuloDiálogoReiniciar">Confirmación</string>
     <string name="msgDiálogo">¿Desea reiniciar el juego?</string>
     <string name="diálogoYes">Yes</string>
     <string name="diálogoNo">No</string>
+
+    <!-- Diálogo de opcion guardar -->
+    <string name="títuloDiálogoGuardar">Partido Guardado</string>
 
 </resources>
