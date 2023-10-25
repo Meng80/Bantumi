@@ -1,6 +1,7 @@
 package es.upm.miw.bantumi;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import java.util.Locale;
 
 import es.upm.miw.bantumi.entity.InformacionTableroEntity;
 import es.upm.miw.bantumi.model.BantumiViewModel;
+import es.upm.miw.bantumi.JuegoBantumi;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -157,26 +159,19 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.opcGuardarPartida:
-                List<InformacionTableroEntity> tablero = new ArrayList<>();
-                for (int i = 0; i < JuegoBantumi.NUM_POSICIONES; i++) {
-                    InformacionTableroEntity informacion = new InformacionTableroEntity();
-                    informacion.posicion = i;
-                    informacion.dato = juegoBantumi.getSemillas(i);
-                    tablero.add(informacion);
-                    Log.d("test", "posicion: " + i + " - " + juegoBantumi.getSemillas(i));
-                }
-
-                Gson gson = new Gson();
-                String jsonSave = gson.toJson(tablero);
-
+                String jsonSave = juegoBantumi.serializa();
                 try {
-                    FileOutputStream outStream = openFileOutput("InformacionTablero.json", MODE_PRIVATE);
+                    Context context = getApplicationContext();
+                    FileOutputStream outStream = context.openFileOutput("InformacionTablero.json", Context.MODE_PRIVATE);
                     outStream.write(jsonSave.getBytes(StandardCharsets.UTF_8));
                     outStream.close();
-                    Toast.makeText(MainActivity.this, R.string.títuloDiálogoGuardar, Toast.LENGTH_LONG).show();
+
+                    Toast.makeText(context, context.getString(R.string.títuloDiálogoGuardar), Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
-                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
+
                 return true;
 
             case R.id.opcRecuperarPartida:
@@ -191,13 +186,8 @@ public class MainActivity extends AppCompatActivity {
                             sb.append(line);
                         }
                         inputStreamReader.close();
+                        juegoBantumi.deserializa(sb.toString());
 
-                        String jsonLoad = sb.toString();
-                        Gson gsonLoad = new Gson();
-                        InformacionTableroEntity[] informacion = gsonLoad.fromJson(jsonLoad, InformacionTableroEntity[].class);
-                        for (InformacionTableroEntity i : informacion) {
-                            juegoBantumi.setSemillas(i.posicion, i.dato);
-                        }
                         Toast.makeText(MainActivity.this, R.string.títuloDiálogoRecuperar, Toast.LENGTH_LONG).show();
                         changed = false;
                     } catch (Exception e) {

@@ -1,7 +1,20 @@
 package es.upm.miw.bantumi;
 
-import android.util.Log;
+import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+import es.upm.miw.bantumi.entity.InformacionTableroEntity;
 import es.upm.miw.bantumi.model.BantumiViewModel;
 
 public class JuegoBantumi {
@@ -198,9 +211,20 @@ public class JuegoBantumi {
      * @return juego serializado
      */
     public String serializa() {
-        // @TODO
-        return null;
-    }
+
+        List<InformacionTableroEntity> tablero = new ArrayList<>();
+        for (int i = 0; i < JuegoBantumi.NUM_POSICIONES; i++) {
+            InformacionTableroEntity informacion = new InformacionTableroEntity();
+            informacion.posicion = i;
+            informacion.dato = getSemillas(i);
+            tablero.add(informacion);
+            Log.d("test", "posicion: " + i + " - " + getSemillas(i));
+        }
+
+        Gson gson = new Gson();
+        return gson.toJson(tablero);
+        }
+
 
     /**
      * Recupera el estado del juego a partir de su representación
@@ -208,6 +232,12 @@ public class JuegoBantumi {
      * @param juegoSerializado cadena que representa el estado completo del juego
      */
     public void deserializa(String juegoSerializado) {
-        // @TODO
+        Gson gson = new Gson();
+        List<InformacionTableroEntity> informacion = gson.fromJson(juegoSerializado, new TypeToken<List<InformacionTableroEntity>>() {}.getType());
+
+        for (InformacionTableroEntity i : informacion) {
+            setSemillas(i.posicion, i.dato);
+        }
+
     }
 }
