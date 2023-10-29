@@ -45,5 +45,9 @@
         android:icon="@android:drawable/ic_menu_info_details"
         android:orderInCategory="200"
         />
+    <item
+        android:id="@+id/opcNuevoJuego"
+        android:title="@string/txtNuevoJuego"
+        android:orderInCategory="300"/>
 
 </menu>

@@ -67,5 +67,9 @@
     <string name="diálogoDelete">¿Desea eliminar los resultados?</string>
     <string name="button_delete">DELETE</string>
 
+    <!-- Diálogo de inicializar juego -->
+    <string name="txtNuevoJuego">Nuevo Juego</string>
+
+
 
 </resources>

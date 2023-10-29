@@ -227,6 +227,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
 
+            case R.id.opcNuevoJuego:
+                Intent newGameIntent = new Intent(this, NewGameActivity.class);
+                startActivity(newGameIntent);
+                return true;
+
 
             // @TODO!!! resto opciones
 

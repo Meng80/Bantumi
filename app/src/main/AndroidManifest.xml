@@ -29,6 +29,9 @@
         <activity android:name=".BantumiPrefs">
         </activity>
 
+        <activity android:name=".NewGameActivity">
+        </activity>
+
     </application>
 
 </manifest>
