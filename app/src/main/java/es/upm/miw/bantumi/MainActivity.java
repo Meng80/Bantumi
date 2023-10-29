@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//       puntuacionRepository= new PuntuacionRepository((Application) getApplicationContext());
-
         // Instancia el ViewModel y el juego, y asigna observadores a los huecos
         numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
@@ -174,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 };
                 if(changed){
                     new RebootAlertDialog(R.string.títuloDiálogoReiniciar, R.string.msgDiálogo, callBack).show(getSupportFragmentManager(), "DIALOGO_REINICIAR");
+                    resetBackgrounds();
                 }
                 else
                     callBack.onSuccess();
@@ -253,15 +252,35 @@ public class MainActivity extends AppCompatActivity {
         switch (juegoBantumi.turnoActual()) {
             case turnoJ1:
                 juegoBantumi.jugar(num);
+                v.setBackground(getResources().getDrawable(R.drawable.marca_jugador2_background));
                 break;
             case turnoJ2:
                 juegaComputador();
+                v.setBackground(getResources().getDrawable(R.drawable.marca_jugador2_background));
+                v.setBackground(getResources().getDrawable(R.drawable.semi_transparent_background));
                 break;
             default:    // JUEGO TERMINADO
                 finJuego();
         }
         if (juegoBantumi.juegoTerminado()) {
             finJuego();
+        }
+    }
+
+    private void resetBackgrounds() {
+        for (int i = 0; i < JuegoBantumi.NUM_POSICIONES; i++) {
+            String num2digitos = String.format(Locale.getDefault(), "%02d", i);
+            int idBoton = getResources().getIdentifier("casilla_" + num2digitos, "id", getPackageName());
+            if (idBoton != 0) {
+                View viewHueco = findViewById(idBoton);
+                viewHueco.setBackgroundResource(R.drawable.bantumi_button_background);
+                viewHueco.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        huecoPulsado(v);
+                    }
+                });
+            }
         }
     }
 
@@ -285,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
      * El juego ha terminado. Volver a jugar?
      */
     private void finJuego() {
-        TextView tvJugador1 = findViewById(R.id.tvPlayer1);
+        resetBackgrounds();
         TextView tvJugador2 = findViewById(R.id.tvPlayer2);
         String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
                 ? "Gana Jugador 1"
@@ -313,7 +332,6 @@ public class MainActivity extends AppCompatActivity {
         //save
         Puntuacion puntuacion = new Puntuacion(nombreJugador, juegoBantumi.getSemillas(6), tvJugador2.getText().toString(), juegoBantumi.getSemillas(13));
         puntuacionViewModel.insert(puntuacion);
-
 
         }
 

@@ -51,16 +51,17 @@ public class Puntuacion {
         this.gameTime = Calendar.getInstance().getTime();
     }
 
-    public String getPuntuacion(){
-        return "Puntuacion{" +
-                "playerOneName='" + playerOneName + '\'' +
-                ", playerOneSeedStorage=" + playerOneSeedStorage +
-                ", playerTwoName='" + playerTwoName + '\'' +
-                ", playerTwoSeedStorage=" + playerTwoSeedStorage +
-                ", winnerName='" + winnerName + '\'' +
-                ", winnerSeedStorage=" + winnerSeedStorage +
-                ", gameTime=" + gameTime +
+    public String getPuntuacion() {
+        return "Puntuacion{\n" +
+                "playerOneName='" + playerOneName + "',\n" +
+                "playerOneSeedStorage=" + playerOneSeedStorage + ",\n" +
+                "playerTwoName='" + playerTwoName + "',\n" +
+                "playerTwoSeedStorage=" + playerTwoSeedStorage + ",\n" +
+                "winnerName='" + winnerName + "',\n" +
+                "winnerSeedStorage=" + winnerSeedStorage + ",\n" +
+                "gameTime=" + gameTime + "\n" +
                 '}';
     }
+
 
 }
