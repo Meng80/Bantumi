@@ -37,4 +37,13 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-core:$lifecycle_version"
     implementation 'com.google.code.gson:gson:2.8.9'
+
+    //Room
+    def room_version = "2.5.2"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    //PreferenceFragmentCompat
+    implementation "androidx.preference:preference:1.2.1"
+
 }

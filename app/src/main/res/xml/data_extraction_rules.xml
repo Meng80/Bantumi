@@ -5,15 +5,12 @@
 -->
 <data-extraction-rules>
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
+        <include domain="file" path="shared_prefs/*" />
+        <include domain="root" path="data/data/es.upm.miw.bantumi/databases" />
+
     </cloud-backup>
-    <!--
-    <device-transfer>
-        <include .../>
-        <exclude .../>
-    </device-transfer>
-    -->
+
+    <include path="files/*" />
+    <exclude path="temp/*" />
+
 </data-extraction-rules>

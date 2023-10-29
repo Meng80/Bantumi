@@ -2,6 +2,8 @@ package es.upm.miw.bantumi;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,43 +16,61 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
+
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
-import es.upm.miw.bantumi.entity.InformacionTableroEntity;
+
+import es.upm.miw.bantumi.activity.LeaderboardActivity;
+import es.upm.miw.bantumi.db.Puntuacion;
+import es.upm.miw.bantumi.db.PuntuacionViewModel;
 import es.upm.miw.bantumi.model.BantumiViewModel;
-import es.upm.miw.bantumi.JuegoBantumi;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    protected final String LOG_TAG = "MiW";
-    JuegoBantumi juegoBantumi;
+    protected static final String LOG_TAG = "MiW";
+    public JuegoBantumi juegoBantumi;
     BantumiViewModel bantumiVM;
     int numInicialSemillas;
     boolean changed = false;
     boolean began = false;
 
-    @Override
+    SharedPreferences sharedPreferences;
+
+    public static PuntuacionViewModel puntuacionViewModel;
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//       puntuacionRepository= new PuntuacionRepository((Application) getApplicationContext());
 
         // Instancia el ViewModel y el juego, y asigna observadores a los huecos
         numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
+
+        puntuacionViewModel = new ViewModelProvider(this).get(PuntuacionViewModel.class);
+
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    }
+
 
     /**
      * Crea y subscribe los observadores asignados a las posiciones del tablero.
@@ -132,9 +152,10 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.opcAjustes: // @todo Preferencias
-//                startActivity(new Intent(this, BantumiPrefs.class));
-//                return true;
+            case R.id.opcAjustes: // @todo Preferencias
+                startActivity(new Intent(this, BantumiPrefs.class));
+                return true;
+
             case R.id.opcAcercaDe:
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.aboutTitle)
@@ -167,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     outStream.close();
 
                     Toast.makeText(context, context.getString(R.string.títuloDiálogoGuardar), Toast.LENGTH_LONG).show();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -199,6 +221,11 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     callback.onSuccess();
                 }
+                return true;
+
+            case R.id.opcMejoresResultados:
+                Intent intent = new Intent(MainActivity.this, LeaderboardActivity.class);
+                startActivity(intent);
                 return true;
 
 
@@ -258,6 +285,8 @@ public class MainActivity extends AppCompatActivity {
      * El juego ha terminado. Volver a jugar?
      */
     private void finJuego() {
+        TextView tvJugador1 = findViewById(R.id.tvPlayer1);
+        TextView tvJugador2 = findViewById(R.id.tvPlayer2);
         String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
                 ? "Gana Jugador 1"
                 : "Gana Jugador 2";
@@ -272,8 +301,21 @@ public class MainActivity extends AppCompatActivity {
         .show();
 
         // @TODO guardar puntuación
-
-        // terminar
+        //Terminar
         new FinalAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
-    }
+
+        //Ajuste
+        String nombreJugador = sharedPreferences.getString(
+                "nombre",
+                getString(R.string.prefNameplayer)
+        );
+
+        //save
+        Puntuacion puntuacion = new Puntuacion(nombreJugador, juegoBantumi.getSemillas(6), tvJugador2.getText().toString(), juegoBantumi.getSemillas(13));
+        puntuacionViewModel.insert(puntuacion);
+
+
+        }
+
+
 }

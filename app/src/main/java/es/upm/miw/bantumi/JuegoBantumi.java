@@ -1,16 +1,9 @@
 package es.upm.miw.bantumi;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import java.io.FileOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 

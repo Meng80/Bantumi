@@ -42,6 +42,7 @@
     <string name="prefTextoNombreJugador">Pulse para teclear el nombre del jugador</string>
     <string name="prefTituloCategoria2">Ajustes del juego</string>
     <string name="prefTituloCategoria3">Más información…</string>
+    <string name="prefNameplayer">JugadorUno</string>
 
     <!-- Diálogo Final -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
@@ -61,6 +62,10 @@
     <string name="msgDialogoRecuperar">Has Iniciado el juego</string>
     <string name="diálogoRecuperar">¿Desea reiniciar otro partido?</string>
 
+    <!-- Diálogo de delete -->
+    <string name="títuloDiálogoDelete">Mejores resultado </string>
+    <string name="diálogoDelete">¿Desea eliminar los resultados?</string>
+    <string name="button_delete">DELETE</string>
 
 
 </resources>
